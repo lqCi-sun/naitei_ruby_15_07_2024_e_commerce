@@ -1,0 +1,30 @@
+.reviews {
+  margin: 20px 0;
+}
+
+.review {
+  padding: 15px;
+  border: 1px solid #ddd; /* Đường viền cho mỗi đánh giá */
+  border-radius: 5px; /* Góc bo tròn */
+  margin-bottom: 10px; /* Khoảng cách giữa các đánh giá */
+  background-color: #f9f9f9; /* Màu nền cho mỗi đánh giá */
+}
+
+.review-header {
+  font-weight: bold;
+}
+
+.review-body {
+  margin: 10px 0;
+}
+
+.review-footer {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.review-divider {
+  border: none;
+  border-top: 1px solid #ddd; /* Đường phân cách giữa các đánh giá */
+  margin: 10px 0;
+}

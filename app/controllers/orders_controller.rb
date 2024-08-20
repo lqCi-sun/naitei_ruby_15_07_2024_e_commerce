@@ -17,6 +17,8 @@ class OrdersController < ApplicationController
     end
   end
 
+  before_action :find_order, only: %i(update_status)
+
   def order_info
     @order = Order.new
   end
@@ -139,6 +141,6 @@ class OrdersController < ApplicationController
     return if @order
 
     flash[:error] = t("orders.not_found")
-    redirect_to orders_path_for_current_role
+    redirect_to orders_path
   end
 end
