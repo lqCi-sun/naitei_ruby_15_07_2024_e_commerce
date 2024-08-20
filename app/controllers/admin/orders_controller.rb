@@ -1,6 +1,6 @@
 class Admin::OrdersController < AdminController
   before_action :set_orders, only: %i(index)
-  before_action :find_order, only: %i(update_status)
+  before_action :find_order, only: %i(update_status show)
 
   def index
     sort_by = params[:sort_by].present? ? params[:sort_by].to_sym : nil
@@ -13,6 +13,12 @@ class Admin::OrdersController < AdminController
                 @orders.sorted_by(:updated_at, :desc)
               end
     @pagy, @orders = pagy @orders, limit: Settings.page_10
+  end
+
+  def show
+    return unless find_order
+
+    @pagy, @order_items = pagy(@order.order_items, items: Settings.page_10)
   end
 
   def update_status
@@ -97,28 +103,19 @@ class Admin::OrdersController < AdminController
   def prepare_order
     @order.order_items.each do |order_item|
       product = order_item.product
-      product.decrement!(:stock, order_item.quantity)
+      amount = order_item.quantity
+      product.increment(stock_amount: amount, sold_amount: amount)
     end
     @order.update(status: :preparing)
     flash[:success] = t "admin.orders.orders_list.update_to_preparing"
   end
 
   def cancel_order
-    Order.transaction do
-      @order.order_items.each do |order_item|
-        product = order_item.product
-        product.increment!(:stock, order_item.quantity)
-      end
-
-      if @order.update(
-        status: :cancelled,
-        refuse_reason: params[:refuse_reason]
-      )
-        flash[:success] = t "admin.orders.orders_list.update_to_cancelled"
-      else
-        flash[:error] = t "admin.orders.orders_list.update_failed"
-        raise ActiveRecord::Rollback
-      end
+    if @order.cancel_order(role: :admin, refuse_reason: params[:refuse_reason])
+      flash[:success] = t "admin.orders.orders_list.update_to_cancelled"
+    else
+      flash[:error] = t "admin.orders.orders_list.update_failed"
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -131,7 +128,7 @@ class Admin::OrdersController < AdminController
     @order = Order.find_by(id: params[:id])
     unless @order
       flash[:error] = t("admin.orders.not_found")
-      redirect_to orders_path
+      redirect_to admin_orders_path
       return false
     end
     true

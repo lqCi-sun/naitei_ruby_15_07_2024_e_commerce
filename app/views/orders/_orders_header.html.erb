@@ -19,7 +19,7 @@
         <%= t ".refuse_reason" %>
       <% elsif @orders.any? {|order| order.status.to_sym == :delivered} %>
         <%= t ".received_by" %>
-      <% else %>
+      <% elsif display_action_column?(@orders, current_user) %>
         <%= t ".action" %>
       <% end %>
     </th>

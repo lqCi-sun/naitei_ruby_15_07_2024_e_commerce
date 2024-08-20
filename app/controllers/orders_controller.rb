@@ -3,9 +3,10 @@ class OrdersController < ApplicationController
   before_action :set_order_items_ids, :set_default_data, :set_order_items,
                 only: %i(order_info create)
   before_action :set_orders, only: %i(index)
+  before_action :find_order, only: %i(update_status show)
+
   def show
-    @order = Order.find params[:id]
-    if @order && @order.user_id == current_user.id
+    if @order.user_id == current_user.id
       @pagy, @order_items = pagy(
         @order.order_items,
         items: Settings.page_10
@@ -35,7 +36,7 @@ class OrdersController < ApplicationController
   def set_orders
     @orders = fetch_orders
     @current_status = determine_current_status
-    @orders_count = @orders.recently_updated
+    @orders_count = @current_user.orders.recently_updated
   end
 
   def index
@@ -48,6 +49,16 @@ class OrdersController < ApplicationController
       @orders = @orders.sorted_by_created_at
     end
     @pagy, @orders = pagy(@orders, limit: Settings.page_10)
+  end
+
+  def update_status
+    unless @order.status_pending? &&
+           params[:status].to_sym == :cancelled
+      return
+    end
+
+    cancel_order
+    redirect_to request.referer || orders_path
   end
 
   private
@@ -113,5 +124,21 @@ class OrdersController < ApplicationController
     else
       :all
     end
+  end
+
+  def cancel_order
+    if @order.cancel_order(role: :user, refuse_reason: params[:refuse_reason])
+      flash[:success] = t "admin.orders.orders_list.update_to_cancelled"
+    else
+      flash[:error] = t "admin.orders.orders_list.update_failed"
+    end
+  end
+
+  def find_order
+    @order = Order.find_by(id: params[:id])
+    return if @order
+
+    flash[:error] = t("orders.not_found")
+    redirect_to orders_path_for_current_role
   end
 end

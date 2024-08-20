@@ -146,6 +146,11 @@ vi:
       all: "Tất cả đơn hàng (%{count})"
     orders_list:
       no_image: "Không có ảnh"
+      cancel: "Hủy đơn hàng"
+      confirm_cancel_order: "Bạn có muốn xóa hàng? Tiền sẽ không được hoàn trả!!!"
+    refuse_reason_by_user: "[Người dùng]: %{reason}"
+    refuse_reason_by_admin: "[Admin]: %{reason}"
+    updated_to_cancelled: "Đơn hàng đã được hủy bỏ."
   addresses:
     messages:
       success: "Thêm địa chỉ thành công!"
@@ -181,5 +186,5 @@ vi:
         cancel: "Hủy đơn hàng"
         confirm_cancel_order: "Bạn có chắc chắn muốn từ chối đơn hàng của khách không?"
         refuse_reason: "Lý do từ chối"
-        update_to_cancelled: "Xóa đơn"
+        update_to_cancelled: "Xóa đơn thành công"
       not_found_product: "Không tìm thấy đơn hàng"

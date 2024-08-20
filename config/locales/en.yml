@@ -146,6 +146,13 @@ en:
       price: "Price"
       quantity: "Quantity"
       total: "Total"
+    orders_list:
+      no_image: "No image"
+      cancel: "Cancel Order"
+      confirm_cancel_order: "Are you sure you want to cancel this order?"
+    refuse_reason_by_user: "[By User]: %{reason}"
+    refuse_reason_by_admin: "[By Admin]: %{reason}"
+    updated_to_cancelled: "Order has been cancelled."
   addresses:
     messages:
       success: "Add address successfully!"

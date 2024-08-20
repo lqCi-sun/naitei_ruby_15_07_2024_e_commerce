@@ -31,4 +31,40 @@ class Order < ApplicationRecord
   scope :sorted_by, lambda {|field, direction = :asc|
     order(field => direction)
   }
+
+  scope :recently_updated, ->{order(updated_at: :desc)}
+
+  def cancel_order role:, refuse_reason:
+    formatted_reason = case role
+                       when :admin
+                         I18n.t(
+                           "orders.refuse_reason_by_admin",
+                           reason: refuse_reason
+                         )
+                       when :user
+                         I18n.t(
+                           "orders.refuse_reason_by_user",
+                           reason: refuse_reason
+                         )
+                       else
+                         refuse_reason
+                       end
+
+    Order.transaction do
+      order_items.each do |order_item|
+        product = order_item.product
+        amount = order_item.quantity
+        product.increment(stock_amount: amount, sold_amount: -amount)
+      end
+
+      update!(
+        status: :cancelled,
+        refuse_reason: formatted_reason
+      )
+    end
+  rescue ActiveRecord::RecordInvalid
+    error_message = I18n.t("admin.orders.orders_list.update_failed")
+    errors.add(:base, error_message)
+    false
+  end
 end

@@ -1,20 +1,39 @@
 <tr>
-  <td>#<%= order.id %></td>
+  <td>
+    <%= link_to "##{order.id}", order_path(order) %>
+  </td>
   <td class="product-image">
-    <% if order.order_items.first.present? %>
-      <%= image_tag(resized_image(order.order_items.first.product), alt: order.order_items.first.product.product_name, class: "product-image") %>
+    <% if order.order_items.any? %>
+      <%= link_to image_tag(resized_image(order.order_items.first.product), alt: order.order_items.first.product.product_name, class: "product-image"), order_path(order) %>
     <% else %>
       <span><%= t ".no_image" %></span>
     <% end %>
   </td>
   <td><%= status_name(order.status) %></td>
   <td class="cart-container">
-    <span class="total-price"><%= format_price order.total %></span>
+    <span class="total-price"><%= format_currency(order.total) %></span>
   </td>
-  <td><%= order.created_at.strftime(Settings.date_time_format) %></td>
-  <% if order.status.to_sym == :cancelled %>
+  <td>
+    <div><%= order.created_at.strftime(Settings.time_format) %></div>
+    <div><%= order.created_at.strftime(Settings.date_format) %></div>
+  </td>
+  <td>
+    <div><%= order.updated_at.strftime(Settings.time_format) %></div>
+    <div><%= order.updated_at.strftime(Settings.date_format) %></div>
+  </td>
+  <% if order.status_cancelled? %>
     <td><%= order.refuse_reason %></td>
-  <% else %>
-    <td></td>
+  <% elsif order.status_pending? %>
+    <td>
+      <%= form_with url: update_status_order_path(order, status: :cancelled), method: :patch, local: true do |form| %>
+        <div class="form-group">
+          <%= form.label :refuse_reason, t(".refuse_reason_by_user") %>
+          <%= form.text_area :refuse_reason, class: "form-control", required: true %>
+        </div>
+        <%= form.submit t(".cancel"), class: "btn btn-danger mt-2", data: {turbo_confirm: t(".confirm_cancel_order")} %>
+      <% end %>
+    </td>
+  <% elsif order.status_delivered? %>
+    <td><%= order.user.user_name %></td>
   <% end %>
 </tr>

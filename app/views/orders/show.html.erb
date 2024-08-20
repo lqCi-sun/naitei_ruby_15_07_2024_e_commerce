@@ -5,9 +5,8 @@
   <div class="order-show">
     <div class="order-info-show">
       <div id="receive_info" class="receive_info">
-        <%= render partial: "order_history_info", locals: {current_user: current_user, order: @order} %>
+        <%= render partial: "orders/order_history_info", locals: {order: @order} %>
       </div>
-
       <div id="payment-method" class="payment-method">
         <h4><%= t "orders.order_info.your_payment_method" %></h4>
         <div class="payment-methods">
@@ -29,7 +28,7 @@
         <h3><%= t "orders.order_info.summary.title" %></h3>
         <div class="order-items-container">
           <% if @order_items.present? %>
-            <%= render partial: "order_history_item", collection: @order_items, as: :order_item %>
+            <%= render partial: "orders/order_history_item", collection: @order_items, as: :order_item %>
           <% else %>
             <p><%= t "orders.order_info.summary.empty_cart" %></p>
           <% end %>

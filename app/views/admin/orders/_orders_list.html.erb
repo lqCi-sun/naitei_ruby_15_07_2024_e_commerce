@@ -1,8 +1,10 @@
 <tr>
-  <td>#<%= order.id %></td>
+  <td>
+    <%= link_to "##{order.id}", admin_order_path(order) %>
+  </td>
   <td class="product-image">
-    <% if order.order_items.first.present? %>
-      <%= image_tag(resized_image(order.order_items.first.product), alt: order.order_items.first.product.product_name, class: "product-image") %>
+    <% if order.order_items.any? %>
+      <%= link_to image_tag(resized_image(order.order_items.first.product), alt: order.order_items.first.product.product_name, class: "product-image"), admin_order_path(order) %>
     <% else %>
       <span><%= t ".no_image" %></span>
     <% end %>
@@ -19,9 +21,9 @@
     <div><%= order.updated_at.strftime(Settings.time_format) %></div>
     <div><%= order.updated_at.strftime(Settings.date_format) %></div>
   </td>
-  <% if order.status.to_sym == :cancelled %>
+  <% if order.status_cancelled? %>
     <td><%= order.refuse_reason %></td>
-  <% elsif order.status.to_sym == :delivered %>
+  <% elsif order.status_delivered? %>
     <td><%= order.user.user_name %></td>
   <% else %>
     <td>

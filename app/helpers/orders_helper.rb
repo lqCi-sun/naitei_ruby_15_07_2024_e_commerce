@@ -34,4 +34,11 @@ module OrdersHelper
       orders_path(sort_by:, status:)
     end
   end
+
+  def display_action_column? orders, current_user
+    current_user.role_admin? && orders.any? do |order|
+      %w(preparing in_transit).include? order.status.to_sym
+    end ||
+      orders.any?{|order| order.status.to_sym == :pending}
+  end
 end

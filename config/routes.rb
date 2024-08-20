@@ -23,10 +23,15 @@ Rails.application.routes.draw do
     resources :addresses, only: %i(new create)
     get "orders/order_info"
     post "orders", to: "orders#create"
-    resources :orders, only: %i(show index)
     get "admin_show", to: "products#admin_show"
+    resources :orders, only: %i(show index) do
+      member do
+        patch :update_status
+        post :create_feedback
+      end
+    end
     namespace :admin do
-      resources :orders, only: %i(index) do
+      resources :orders, only: %i(index show) do
         member do
           patch :update_status
         end

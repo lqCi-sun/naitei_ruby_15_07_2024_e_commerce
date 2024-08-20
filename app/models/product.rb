@@ -73,13 +73,9 @@ class Product < ApplicationRecord
     %w(carts category feedbacks image_attachment image_blob order_items)
   end
 
-  def increment_stock amount
-    self.stock += amount
-    save!
-  end
-
-  def decrement_stock amount
-    self.stock -= amount
+  def increment stock_amount: 0, sold_amount: 0
+    self.stock += stock_amount
+    self.sold += sold_amount
     save!
   end
 end
