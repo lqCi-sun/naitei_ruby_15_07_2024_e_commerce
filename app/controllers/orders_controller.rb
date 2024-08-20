@@ -136,6 +136,10 @@ class OrdersController < ApplicationController
     end
   end
 
+  def formatted_refuse_reason
+    t("orders.refuse_reason_by_user", reason: params[:refuse_reason])
+  end
+
   def find_order
     @order = Order.find_by(id: params[:id])
     return if @order
