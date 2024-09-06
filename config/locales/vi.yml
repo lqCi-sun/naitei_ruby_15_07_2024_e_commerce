@@ -149,6 +149,7 @@ vi:
       add_to_cart: "Thêm vào giỏ hàng"
       sold: "Đã bán"
       out_of_stock: "Bán hết"
+      share_title: "Sản phẩm này thật tuyệt vời! Hãy thử nó ngay!"
     reviews:
       sort_by_newest: "Mới nhất"
       sort_by_oldest: "Cũ nhất"
@@ -204,6 +205,7 @@ vi:
       updated_at: "Thời gian cập nhật"
       refuse_reason: "Lý do từ chối"
       received_by: "Người nhận"
+      select: "Chọn"
     status_list:
       all: "Tất cả đơn hàng (%{count})"
     orders_list:
@@ -217,6 +219,9 @@ vi:
     updated_to_cancelled: "Đơn hàng đã được hủy bỏ."
     review: "Đánh giá"
     repurchase: "Mua lại"
+    no_orders_selected: "Không có đơn hàng nào được chọn"
+    cannot_transition: "Đơn hàng #%{order_id} không thể chuyển sang trạng thái tiếp theo"
+    successfully_updated: "Đơn hàng đã được cập nhật thành công"
   addresses:
     messages:
       success: "Thêm địa chỉ thành công!"
@@ -297,3 +302,8 @@ vi:
     comment: "Nhận xét"
     confirm_review: "Xác nhận gửi đánh giá?"
     image: "Ảnh sản phẩm"
+  social_share_button:
+    share_to: "Chia sẻ tới:"
+    twitter: "Twitter"
+    reddit: "Reddit"
+    email: "Email"

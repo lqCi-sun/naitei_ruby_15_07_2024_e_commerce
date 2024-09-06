@@ -1,5 +1,8 @@
 <thead>
   <tr>
+    <% if @orders.any? { |order| order.status_pending? || order.status_preparing? || order.status_in_transit? } %>
+      <th><%= t ".select" %></th>
+    <% end %>
     <th><%= t ".order_id" %></th>
     <th><%= t ".product_image" %></th>
     <% if @current_status.to_sym == :all %>
@@ -14,7 +17,7 @@
       <% if @orders.any? {|order| order.status.to_sym == :cancelled} %>
         <%= t ".refuse_reason" %>
       <% elsif @orders.any? {|order| order.status.to_sym == :delivered} %>
-        <%= t ".action" %>
+        <%= t ".received_by" %>
       <% elsif display_action_column?(@orders, current_user) %>
         <%= t ".action" %>
       <% end %>

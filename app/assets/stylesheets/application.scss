@@ -1,3 +1,4 @@
+@import 'social-share-button';
 @import 'bootstrap';
 @import 'bootstrap-icons';
 @import 'bootstrap-min';
@@ -49,5 +50,15 @@ a {
 
   100% {
     opacity: 1;
+  }
+}
+
+$share-button-size: 24px;
+
+.social-share-button {
+  .ssb-icon {
+    background-size: $share-button-size $share-button-size;
+    height: $share-button-size;
+    width: $share-button-size;
   }
 }

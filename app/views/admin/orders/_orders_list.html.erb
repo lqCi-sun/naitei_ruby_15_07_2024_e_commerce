@@ -1,4 +1,7 @@
 <tr>
+  <% if order.status_pending? || order.status_preparing? || order.status_in_transit? %>
+    <td><%= check_box_tag "order_ids[]", order.id %></td>
+  <% end %>
   <td>
     <%= link_to "##{order.id}", admin_order_path(order) %>
   </td>

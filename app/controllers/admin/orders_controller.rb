@@ -33,6 +33,22 @@ class Admin::OrdersController < AdminController
     @orders_count = Order.all
   end
 
+  def batch_update
+    order_ids = params[:order_ids] || []
+
+    return redirect_no_orders if order_ids.empty?
+
+    orders = Order.where(id: order_ids)
+    values = []
+
+    orders.each do |order|
+      process_order order, values
+    end
+
+    Order.import values, on_duplicate_key_update: [:status, :updated_at]
+    redirect_to admin_orders_path, notice: t("orders.successfully_updated")
+  end
+
   private
 
   def status_valid?
@@ -121,16 +137,27 @@ class Admin::OrdersController < AdminController
     true
   end
 
-  def valid_status_transition current_status, new_status
-    case current_status
-    when :pending
-      %i(preparing cancelled).include?(new_status)
-    when :preparing
-      new_status == :in_transit
-    when :in_transit
-      new_status == :delivered
-    else
-      false
+  def next_status_for order
+    current_status_value = Order.statuses[order.status]
+    next_status_value = current_status_value + 1
+    Order.statuses.key(next_status_value)
+  end
+
+  def redirect_no_orders
+    redirect_to(
+      request.referer || admin_orders_path,
+      alert: t("orders.no_orders_selected")
+    )
+  end
+
+  def process_order order, values
+    next_status = next_status_for order
+    if next_status.nil?
+      flash[:alert] = t("orders.cannot_transition", order_id: order.id)
+      return
     end
+
+    order.assign_attributes(status: next_status, updated_at: Time.current)
+    values << order
   end
 end

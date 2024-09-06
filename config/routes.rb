@@ -39,6 +39,9 @@ Rails.application.routes.draw do
         member do
           patch :update_status
         end
+        collection do
+          put :batch_update
+        end
       end
       resources :products, only: %i(index new create edit update show destroy)
       resources :users, only: %i(index)

@@ -135,6 +135,7 @@ en:
       add_to_cart: "Add to cart"
       sold: "Sold"
       out_of_stock: "Sold out"
+      share_title: "This product is awesome! Try it out!"
     reviews:
       sort_by_newest: "Newest"
       sort_by_oldest: "Newest"
@@ -181,6 +182,7 @@ en:
       updated_at: "Updated At"
       refuse_reason: "Refuse Reason"
       received_by: "Received By"
+      select: "Select"
     status_list:
       all: "All orders (%{count})"
     orders_list:
@@ -205,6 +207,9 @@ en:
     updated_to_cancelled: "Order has been cancelled."
     review: "Review"
     repurchase: "Repurchase"
+    no_orders_selected: "No orders selected"
+    cannot_transition: "Order #%{order_id} cannot transition to the next status"
+    successfully_updated: "Orders were successfully updated"
   addresses:
     messages:
       success: "Add address successfully!"

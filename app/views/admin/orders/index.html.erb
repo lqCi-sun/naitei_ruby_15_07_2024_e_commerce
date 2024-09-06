@@ -3,6 +3,20 @@
 
 <%= render partial: "admin/orders/status_list", locals: {orders_count: @orders_count, current_status: @current_status} %>
 
+<%= form_with url: batch_update_admin_orders_path, method: :put do %>
+  <% case @current_status %>
+  <% when :pending %>
+    <%= hidden_field_tag :new_status, :preparing %>
+    <%= submit_tag t("admin.orders.orders_list.update_to_preparing"), data: { turbo_confirm: t("admin.orders.orders_list.confirm_update_to_preparing") }, class: "btn btn-primary" %>
+  <% when :preparing %>
+    <%= hidden_field_tag :new_status, :in_transit %>
+    <%= submit_tag t("admin.orders.orders_list.update_to_in_transit"), data: { turbo_confirm: t("admin.orders.orders_list.confirm_update_to_in_transit") }, class: "btn btn-primary" %>
+  <% when :in_transit %>
+    <%= hidden_field_tag :new_status, :delivered %>
+    <%= submit_tag t("admin.orders.orders_list.update_to_delivered"), data: { turbo_confirm: t("admin.orders.orders_list.confirm_update_to_delivered") }, class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+
 <div id="order_list">
   <turbo-stream action="replace" target="order_list">
     <template>
