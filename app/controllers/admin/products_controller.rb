@@ -2,8 +2,8 @@ class Admin::ProductsController < AdminController
   before_action :find_product, only: %i(edit update destroy)
   before_action :default_categories, only: %i(new create edit update index)
   def index
-    @q = Product.ransack params[:q]
-    @query = params[:q][:product_name_cont]
+    @q = Product.ransack(params[:q] || {})
+    @query = params.dig(:q, :product_name_cont) || nil
     session[:search_query] = @query
     @pagy, @products_search = pagy(
       @q.result,

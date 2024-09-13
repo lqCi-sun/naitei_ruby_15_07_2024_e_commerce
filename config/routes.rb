@@ -47,5 +47,12 @@ Rails.application.routes.draw do
       resources :users, only: %i(index)
       resources :statistics, only: %i(index)
     end
+    namespace :api do
+      namespace :v1 do
+        namespace :admin do
+          resources :products, only: %i(index new create edit update destroy)
+        end
+      end
+    end
   end
 end

@@ -42,6 +42,26 @@ class ApplicationController < ActionController::Base
                        end
   end
 
+  def encode_token payload
+    JWT.encode(payload, ENV["JWT_SECRET_KEY"])
+  end
+
+  def decode_token
+    auth_header = request.headers["Authorization"]
+    return unless auth_header
+
+    token = auth_header.split(" ")[1]
+    begin
+      JWT.decode(
+        token, ENV["JWT_SECRET_KEY"],
+        true,
+        algorithm: Settings.algorithm
+      )
+    rescue JWT::DecodeError
+      nil
+    end
+  end
+
   protected
 
   def configure_sign_up_params
